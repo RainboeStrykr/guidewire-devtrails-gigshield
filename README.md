@@ -1,6 +1,6 @@
-<img width="1921" height="863" alt="image" src="https://github.com/user-attachments/assets/c6789779-f495-49cc-a15f-dc7a17dbb306" /># GigShield — AI-Powered Parametric Income Insurance for Q-Commerce Delivery Partners
+# GigShield — AI-Powered Parametric Income Insurance for Q-Commerce Delivery Partners
 
-![Walkthrough video](https://youtu.be/6pQlBcXY8zM)
+[Walkthrough video](https://youtu.be/6pQlBcXY8zM)
 
 ---
 
