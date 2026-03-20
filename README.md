@@ -1,0 +1,246 @@
+# GigShield — AI-Powered Parametric Income Insurance for Q-Commerce Delivery Partners
+
+---
+
+## The Problem
+
+India's Q-Commerce delivery partners and their riders fulfilling 10-minute delivery promises for Zepto, Blinkit, and Swiggy Instamart operate under extreme time pressure in hyperlocal zones. Their entire income model is built on delivery volume per hour. When external disruptions, like heavy rain, extreme heat, curfews, severe AQI, hit, they cannot ride, cannot earn, and have no safety net.
+
+A Blinkit rider in Chennai earning ₹700/day incurs a loss of ₹87.50 per hour of disruption. Over a monsoon week, that's ₹600–₹900 in lost revenue. No insurer covers it. No platform compensates for it. The rider absorbs it entirely.
+
+**GigShield** solves this.
+
+---
+
+## Persona
+
+**Target Segment:** Grocery / Q-Commerce Delivery Partners  
+**Platforms covered:** Zepto, Blinkit, Swiggy Instamart  
+**Geography (Phase 1 focus):** Metro cities with active Q-commerce operations — Chennai, Bengaluru, Mumbai, Delhi, Hyderabad
+
+### Why Q-Commerce specifically?
+
+Q-commerce riders are the most disruption-vulnerable segment in gig delivery:
+
+- **10-minute SLA pressure** means even a 30-minute rainfall event = 3 missed deliveries = direct, calculable income loss
+- **Hyperlocal dark store zones** allow precise, zone-specific risk modelling (a rider in Velachery faces different flood risk than one in Anna Nagar)
+- **Dense urban operation** makes GPS-based activity validation and fraud detection more reliable
+- **Higher delivery frequency** (10–20 deliveries/shift) vs food delivery (4–8) means disruption impact is more granular and measurable
+
+---
+
+## Persona Scenarios
+
+### Scenario A — The Monsoon Shutdown
+Rajan, a Blinkit rider in Bengaluru, works 10 AM–8 PM daily. On a Tuesday, the IMD issues a Red alert for Bengaluru South. Rainfall exceeds 25mm/hr for 3 hours. Blinkit pauses operations in its zone. He loses 3 hours × ₹70/hr = ₹210.
+
+**GigShield response:** Weather trigger fires automatically. Claim initiated. ₹210 transferred to his UPI ID within minutes. Zero action required from Rajan.
+
+### Scenario B — The AQI Day
+Priya, a Zepto rider in Delhi, cannot work during a severe smog episode. AQI crosses 400. The Delhi government issues an outdoor work advisory. She loses a 6-hour shift.
+
+**GigShield response:** AQI trigger crosses threshold. Policy active. Payout calculated based on her declared weekly hours and average earning rate. Instant transfer.
+
+### Scenario C — The Sudden Curfew
+Mohammed, a Swiggy Instamart rider in Hyderabad, encounters a Section 144 curfew declared in his delivery zone following a local incident. He is unable to access pickup or drop zones for 4 hours.
+
+**GigShield response:** Curfew/social disruption trigger (cross-referenced with government advisory APIs) fires. Income covered for the blocked hours.
+
+---
+
+## Application Workflow
+
+```
+[Worker Onboarding]
+        ↓
+[Risk Profiling — Zone + Platform + Hours + Claim History]
+        ↓
+[Weekly Policy Issued — Dynamic Premium Set]
+        ↓
+[Real-Time Disruption Monitoring — Weather / AQI / Social APIs]
+        ↓
+[Parametric Trigger Fired — Threshold Crossed]
+        ↓
+[Fraud Validation — GPS Check + Activity Cross-Reference]
+        ↓
+[Auto-Claim Approved — Payout Initiated via UPI/Wallet]
+        ↓
+[Worker Dashboard Updated — Income Protected Record]
+```
+
+---
+
+## Weekly Premium Model
+
+Gig workers operate on weekly earning cycles. A monthly premium is misaligned with how they think about money. GigShield prices weekly.
+
+### Base Premium Structure
+
+| Coverage Tier | Weekly Premium | Max Payout/Week | Coverage Hours/Day |
+|---|---|---|---|
+| Basic | ₹29 | ₹500 | 4 hrs |
+| Standard | ₹49 | ₹900 | 6 hrs |
+| Pro | ₹79 | ₹1,500 | 10 hrs |
+
+### Dynamic Pricing Factors (AI-Adjusted Weekly)
+
+The weekly premium is not static. It adjusts each Monday based on:
+
+| Factor | Impact |
+|---|---|
+| Zone flood/waterlogging history | +/- ₹5–15 |
+| IMD 7-day forecast for rider's zone | +/- ₹3–12 |
+| Rider's claim history (fraud score) | +/- ₹2–10 |
+| Platform activity consistency | -₹2 to -₹5 (loyalty discount) |
+| AQI seasonal trends | +/- ₹2–8 |
+
+**Example:** A Zepto rider in a low-flood-risk zone in Chennai during summer may pay ₹39/week for Standard. The same rider during northeast monsoon season in a waterlogging-prone zone may pay ₹61/week.
+
+Premium is collected automatically each Monday via UPI auto-debit or wallet deduction — aligned to when platforms typically release weekly earnings.
+
+---
+
+## Parametric Triggers
+
+These are objective, third-party verifiable thresholds. No human adjudication required.
+
+| Trigger | Source | Threshold | Coverage |
+|---|---|---|---|
+| Heavy Rainfall | IMD API | > 20mm/hr sustained 30+ min | Per-hour income |
+| Extreme Heat | IMD API | Temperature > 43°C during active hours | Per-hour income |
+| Severe AQI | CPCB / OpenAQ API | AQI > 350 (Severe category) | Per-shift income |
+| Flash Flood / Zone Closure | IMD Flood Watch + Local Gov. | Active flood alert in rider's pin code | Per-hour income |
+| Section 144 / Curfew | Government advisory scraper | Curfew declared in rider's active zone | Duration of curfew |
+
+**Coverage exclusions (hard rules):**
+- Vehicle breakdown or repair costs — NOT covered
+- Health or accident claims — NOT covered
+- Income loss due to personal reasons — NOT covered
+
+---
+
+## AI/ML Integration Plan
+
+### 1. Dynamic Premium Calculation
+
+- **Model type:** Gradient Boosted Trees (XGBoost) trained on historical weather data (IMD public datasets), zone-level disruption frequency, and rider activity patterns
+- **Features:** Zone pin code, platform (Zepto/Blinkit/Instamart), declared weekly hours, historical claim count, seasonal weather forecast score, local flood risk index
+- **Output:** Weekly premium recommendation per rider tier
+- **Phase 1:** Rule-based pricing engine with ML architecture scaffolded
+- **Phase 2:** Full ML model inference integrated
+
+### 2. Fraud Detection
+- **GPS Spoofing Detection:** Cross-reference claimed location during disruption against actual GPS coordinates logged via the web app. Flag mismatches > 2km from declared zone.
+- **Activity Validation:** If a platform API (simulated) shows the rider completed deliveries during a claimed disruption window, the claim is flagged for review.
+- **Duplicate Claim Prevention:** Hash-based deduplication on rider ID + disruption event ID + time window.
+- **Anomaly Detection:** Isolation Forest model on claim frequency patterns — riders with unusual spikes in claims relative to peer zones are flagged.
+- **Fraud Score:** Each rider carries a rolling 90-day fraud score (0–100). Score affects premium and can trigger claim holds.
+
+### 3. Risk Profiling on Onboarding
+- Zone risk score computed at signup using: historical disruption data for pin code, seasonal vulnerability index
+- Rider activity pattern (declared vs. verified via platform simulation) assessed
+- Initial fraud risk set to neutral; adjusts dynamically
+
+---
+
+## Tech Stack
+
+### Frontend
+- **React.js** — Rider-facing web app (responsive for mobile browsers, PWA-ready)
+- **React Router** for navigation
+- **Tailwind CSS** for styling
+
+### Backend
+- **Node.js + Express** — REST API server
+- **PostgreSQL** — Primary database (riders, policies, claims, payouts, trigger logs)
+- **Redis** — Session management and real-time trigger event queue
+
+### AI/ML
+- **Python microservice (FastAPI)** — Hosts premium calculation model and fraud detection logic
+- **scikit-learn / XGBoost** — Model training and inference
+- **Called from Node.js backend** via internal HTTP
+
+### External Integrations (Free Tiers / Mocks)
+- **OpenWeatherMap API** — Real-time weather and rainfall data (free tier)
+- **OpenAQ API** — Real-time AQI data by city/coordinates (free, open source)
+- **IMD Public Feed** — Supplementary weather alerts (scraped/mocked)
+- **Razorpay Test Mode** — Simulated premium collection and payout (sandbox)
+- **Mock Platform API** — Simulated Zepto/Blinkit activity feed (built in-house)
+
+### Infrastructure
+- **GitHub** — Version control and CI
+
+---
+
+## Development Plan
+
+### Phase 1 (Current — March 20) — Ideation & Architecture
+- [x] Persona selection and use case definition
+- [x] Parametric trigger design
+- [x] Weekly premium model design
+- [x] Tech stack finalized
+- [ ] Repository scaffolding (React + Node.js boilerplate)
+- [ ] DB schema design (riders, policies, claims, payouts)
+
+### Phase 2 (March 21 – April 4) — Core Build
+- [ ] Worker onboarding flow (web)
+- [ ] Risk profiling engine (rule-based v1)
+- [ ] Policy creation with dynamic weekly premium
+- [ ] Real-time trigger monitoring (OpenWeatherMap + OpenAQ)
+- [ ] Automated claim initiation on trigger fire
+- [ ] Basic fraud detection (GPS + duplicate check)
+- [ ] Razorpay sandbox payout simulation
+
+### Phase 3 (April 5 – 17) — Scale & Polish
+- [ ] ML-based dynamic pricing model (XGBoost)
+- [ ] Advanced fraud detection (Isolation Forest, activity validation)
+- [ ] Full analytics dashboard — worker view + admin/insurer view
+- [ ] Instant payout simulation with Razorpay test mode
+
+---
+
+## Why GigShield
+
+**Zero-friction for the worker.** A Zepto rider earns ₹700/day. They will not navigate a 10-step claims portal. GigShield requires zero action from the rider when a trigger fires — the payout happens before they even know the claim was processed.
+
+**Hyperlocal precision.** Broad city-level weather data is insufficient. A rainstorm in Mylapore doesn't ground a rider in Adyar. GigShield resolves triggers at pin code level, not city level.
+
+**Weekly pricing matches real earning psychology.** Gig workers think in weekly cycles because platforms pay weekly. A ₹49/week premium is a decision they can make every Monday — not a ₹200/month commitment they have to commit to in advance.
+
+**Parametric = no disputes.** Traditional insurance requires proof, adjudication, and waiting. Parametric insurance runs on objective data. If the API says it rained 25mm/hr in your zone, you get paid. No call centers. No claim rejection ambiguity.
+
+---
+
+## Repository Structure (Planned)
+
+```
+gigshield/
+├── client/                  # React frontend
+│   ├── src/
+│   │   ├── pages/           # Onboarding, Dashboard, Claims, Policy
+│   │   ├── components/      # Shared UI components
+│   │   └── services/        # API call wrappers
+├── server/                  # Node.js + Express backend
+│   ├── routes/              # Rider, Policy, Claims, Triggers, Payouts
+│   ├── models/              # PostgreSQL schema (Sequelize/Prisma)
+│   ├── jobs/                # Bull queue jobs for trigger monitoring
+│   └── integrations/        # Weather API, AQI API, Razorpay, Mock Platform
+├── ml-service/              # Python FastAPI microservice
+│   ├── pricing_model/       # XGBoost premium calculator
+│   └── fraud_model/         # Isolation Forest fraud scorer
+├── docs/                    # Architecture diagrams, DB schema
+└── README.md
+```
+
+---
+
+## Team
+
+- Abhiraj Bhowmick
+- Anik Das
+- Yashi Ghosh
+- Sourish Ghosh
+
+---
+
+*GigShield — Because the rider who delivers your groceries in the rain deserves to be covered for it.*
