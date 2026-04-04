@@ -83,7 +83,7 @@ const Header = () => {
               }}
               onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--color-background-secondary)'}
               onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-              onClick={() => navigate('/policy')}
+              onClick={() => navigate('/mycoverage')}
             >
               <Shield size={16} /> My Coverage
             </div>

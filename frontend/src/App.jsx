@@ -9,6 +9,7 @@ import DashboardScreen from './screens/DashboardScreen';
 import TriggerAlertScreen from './screens/TriggerAlertScreen';
 import PolicyDetailsScreen from './screens/PolicyDetailsScreen';
 import ClaimsHistoryScreen from './screens/ClaimsHistoryScreen';
+import MyCoverageScreen from './screens/MyCoverageScreen';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/trigger" element={<TriggerAlertScreen />} />
           <Route path="/policy" element={<PolicyDetailsScreen />} />
           <Route path="/claims" element={<ClaimsHistoryScreen />} />
+          <Route path="/mycoverage" element={<MyCoverageScreen />} />
           <Route path="/" element={<Navigate to="/login" replace />} />
         </Routes>
       </div>
