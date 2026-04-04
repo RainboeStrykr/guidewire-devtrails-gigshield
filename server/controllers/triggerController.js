@@ -1,33 +1,38 @@
-const triggerAlerts = [];
+const TriggerAlert = require('../models/TriggerAlert');
 
-const getTriggerAlerts = (req, res) => {
-    res.json(triggerAlerts);
+const getTriggerAlerts = async (req, res) => {
+    try {
+        // Get last 10 alerts
+        const alerts = await TriggerAlert.find().sort({ createdAt: -1 }).limit(10);
+        res.json(alerts);
+    } catch (error) {
+        console.error('Error fetching alerts:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
 };
 
-const simulateTrigger = (req, res) => {
-    const { zone, intensity, triggerType } = req.body;
-    
-    if (!zone || !intensity) {
-        return res.status(400).json({ message: 'Zone and intensity are required' });
+const simulateTrigger = async (req, res) => {
+    try {
+        const { zone, intensity, triggerType } = req.body;
+        
+        if (!zone || !intensity) {
+            return res.status(400).json({ message: 'Zone and intensity are required' });
+        }
+
+        const newAlert = new TriggerAlert({
+            zone,
+            intensity,
+            triggerType: triggerType || 'Rainfall',
+            status: 'Active'
+        });
+
+        await newAlert.save();
+
+        res.status(201).json({ message: 'Trigger simulated successfully', alert: newAlert });
+    } catch (error) {
+        console.error('Error simulating trigger:', error);
+        res.status(500).json({ message: 'Server error' });
     }
-
-    const newAlert = {
-        id: Date.now(),
-        zone,
-        intensity,
-        triggerType: triggerType || 'Rainfall',
-        timestamp: new Date().toISOString(),
-        status: 'Active'
-    };
-
-    triggerAlerts.unshift(newAlert);
-    
-    // Keep only last 10 alerts for simulation
-    if (triggerAlerts.length > 10) {
-        triggerAlerts.pop();
-    }
-
-    res.status(201).json({ message: 'Trigger simulated successfully', alert: newAlert });
 };
 
 module.exports = {
