@@ -62,8 +62,9 @@ const OnboardingScreen = () => {
   };
 
   return (
-    <div className="page-container" style={{ justifyContent: 'space-between' }}>
-      <div style={{ marginTop: '2rem' }}>
+    <div style={{ backgroundColor: 'var(--surface)', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ maxWidth: '400px', width: '100%', padding: '2rem', backgroundColor: 'var(--surface-container-lowest)', borderRadius: '1.5rem', boxShadow: '0 4px 60px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '80vh' }}>
+      <div style={{ marginTop: '0' }}>
         <ChevronLeft size={24} onClick={() => navigate('/login')} style={{ cursor: 'pointer', marginBottom: '2rem' }} />
         
         <div style={{ color: 'var(--primary)', marginBottom: '1.5rem' }}>
@@ -152,6 +153,7 @@ const OnboardingScreen = () => {
             </>
           )}
         </button>
+      </div>
       </div>
     </div>
   );

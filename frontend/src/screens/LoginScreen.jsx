@@ -14,7 +14,8 @@ const LoginScreen = () => {
   };
 
   return (
-    <div className="page-container" style={{ justifyContent: 'center', height: '100vh' }}>
+    <div style={{ backgroundColor: 'var(--surface)', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ maxWidth: '400px', width: '100%', padding: '2rem', backgroundColor: 'var(--surface-container-lowest)', borderRadius: '1.5rem', boxShadow: '0 4px 60px rgba(0,0,0,0.05)' }}>
       <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
         <div style={{ 
           display: 'inline-flex', 
@@ -59,6 +60,7 @@ const LoginScreen = () => {
       <p style={{ marginTop: '2rem', textAlign: 'center', fontSize: '0.875rem' }}>
         Don't have an account? <span style={{ color: 'var(--primary)', fontWeight: '700', cursor: 'pointer' }} onClick={() => navigate('/onboarding')}>Register</span>
       </p>
+      </div>
     </div>
   );
 };
