@@ -1,0 +1,28 @@
+/* App.css - Minimal global layout adjustments */
+.page-container {
+  padding: 1.5rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.spacer-sm { height: 0.5rem; }
+.spacer-md { height: 1rem; }
+.spacer-lg { height: 2rem; }
+.spacer-xl { height: 3rem; }
+
+.text-subtext {
+  color: var(--on-surface-variant);
+  font-size: 0.875rem;
+}
+
+.text-display {
+  font-size: 2.25rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.text-headline {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
