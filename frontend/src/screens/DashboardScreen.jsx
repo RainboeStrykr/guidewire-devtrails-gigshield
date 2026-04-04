@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Header from '../components/Header';
 import '../gs-styles.css';
 
 const DashboardScreen = () => {
@@ -17,20 +18,7 @@ const DashboardScreen = () => {
 
   return (
     <div className="gs-root">
-      {/* Nav */}
-      <div className="gs-nav">
-        <div className="gs-logo">
-          <div className="gs-logo-dot"></div>
-          GigShield
-        </div>
-        <div className="gs-nav-pills">
-          <div className="gs-pill active" onClick={() => navigate('/dashboard')}>Dashboard</div>
-          <div className="gs-pill" onClick={() => navigate('/policy')}>Policy</div>
-          <div className="gs-pill" onClick={() => navigate('/claims')}>Claims</div>
-          <div className="gs-pill" onClick={() => navigate('/login')}>Logout</div>
-        </div>
-        <div className="gs-avatar">{rider?.name ? rider.name.slice(0, 2).toUpperCase() : 'RK'}</div>
-      </div>
+      <Header />
 
       {/* Hero */}
       <div className="gs-hero">

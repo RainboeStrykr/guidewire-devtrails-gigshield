@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, Filter, CheckCircle2, CloudRain } from 'lucide-react';
+import Header from '../components/Header';
 import '../gs-styles.css';
 
 const ClaimsHistoryScreen = () => {
@@ -21,20 +22,7 @@ const ClaimsHistoryScreen = () => {
 
   return (
     <div className="gs-root">
-      {/* Nav */}
-      <div className="gs-nav">
-        <div className="gs-logo" onClick={() => navigate('/dashboard')} style={{ cursor: 'pointer' }}>
-          <div className="gs-logo-dot"></div>
-          GigShield
-        </div>
-        <div className="gs-nav-pills">
-          <div className="gs-pill" onClick={() => navigate('/dashboard')}>Dashboard</div>
-          <div className="gs-pill" onClick={() => navigate('/policy')}>Policy</div>
-          <div className="gs-pill active" onClick={() => navigate('/claims')}>Claims</div>
-          <div className="gs-pill" onClick={() => navigate('/login')}>Logout</div>
-        </div>
-        <div className="gs-avatar">{rider?.name ? rider.name.slice(0, 2).toUpperCase() : 'RK'}</div>
-      </div>
+      <Header />
 
       <div style={{ maxWidth: '800px', margin: '0 auto', padding: '30px 20px' }}>
         {/* Header */}
