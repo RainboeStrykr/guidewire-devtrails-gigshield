@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, Filter, History, CheckCircle2, CloudRain } from 'lucide-react';
+import { ChevronLeft, Filter, CheckCircle2, CloudRain } from 'lucide-react';
+import '../gs-styles.css';
 
 const ClaimsHistoryScreen = () => {
   const navigate = useNavigate();
+  const [rider, setRider] = useState(null);
+
+  useEffect(() => {
+    const savedRider = localStorage.getItem('rider');
+    if (savedRider) setRider(JSON.parse(savedRider));
+  }, []);
 
   const history = [
     { date: 'Today, 14:45', amount: 210, zone: 'Velanchery', intensity: '25mm/hr', status: 'Credited' },
@@ -13,65 +20,76 @@ const ClaimsHistoryScreen = () => {
   ];
 
   return (
-    <div className="page-container" style={{ backgroundColor: 'var(--surface-container-low)' }}>
-      {/* Header */}
-      <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <ChevronLeft 
-            size={24} 
-            onClick={() => navigate('/dashboard')} 
-            style={{ cursor: 'pointer', marginRight: '1rem' }} 
-          />
-          <h2 style={{ fontSize: '1.25rem' }}>Claims History</h2>
+    <div className="gs-root">
+      {/* Nav */}
+      <div className="gs-nav">
+        <div className="gs-logo" onClick={() => navigate('/dashboard')} style={{ cursor: 'pointer' }}>
+          <div className="gs-logo-dot"></div>
+          GigShield
         </div>
-        <div style={{ padding: '0.5rem', backgroundColor: 'var(--surface-container-lowest)', borderRadius: '0.75rem' }}>
-          <Filter size={20} color="var(--primary)" />
+        <div className="gs-nav-pills">
+          <div className="gs-pill" onClick={() => navigate('/dashboard')}>Dashboard</div>
+          <div className="gs-pill" onClick={() => navigate('/policy')}>Policy</div>
+          <div className="gs-pill active" onClick={() => navigate('/claims')}>Claims</div>
+          <div className="gs-pill" onClick={() => navigate('/login')}>Logout</div>
         </div>
-      </header>
-
-      {/* Aggregate Stats */}
-      <div className="card-lowest ghost-border" style={{ padding: '1.5rem', borderRadius: '1.5rem', marginBottom: '1.5rem', textAlign: 'center' }}>
-        <p className="text-subtext">Total Payouts to Date</p>
-        <h2 style={{ fontSize: '2.5rem', marginTop: '0.5rem' }}>₹1,250</h2>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginTop: '1rem', color: '#43a047', fontSize: '0.875rem', fontWeight: '700' }}>
-          <CheckCircle2 size={16} />
-          <span>ALL FUNDS SETTLED</span>
-        </div>
+        <div className="gs-avatar">{rider?.name ? rider.name.slice(0, 2).toUpperCase() : 'RK'}</div>
       </div>
 
-      {/* Claims List (No Borders, Tonal Shift) */}
-      <div style={{ display: 'grid', gap: '0.5rem' }}>
-        {history.map((claim, idx) => (
-          <div 
-            key={idx} 
-            className="card-lowest" 
-            style={{ 
-              padding: '1.25rem', 
-              borderRadius: '1.25rem', 
-              display: 'flex', 
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            }}
-          >
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <div style={{ padding: '0.75rem', backgroundColor: 'var(--surface-container-low)', borderRadius: '1rem', color: 'var(--primary)' }}>
-                <CloudRain size={20} />
-              </div>
-              <div>
-                <h4 style={{ fontSize: '1rem', fontWeight: '700' }}>₹{claim.amount}</h4>
-                <p className="text-subtext">{claim.date}</p>
-              </div>
-            </div>
-            
-            <div style={{ textAlign: 'right' }}>
-              <p style={{ fontSize: '0.875rem', fontWeight: '600' }}>{claim.zone}</p>
-              <p style={{ fontSize: '0.75rem', color: '#43a047', fontWeight: '700' }}>{claim.status}</p>
-            </div>
+      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '30px 20px' }}>
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <ChevronLeft 
+              size={24} 
+              onClick={() => navigate('/dashboard')} 
+              style={{ cursor: 'pointer', marginRight: '12px' }} 
+            />
+            <div className="gs-rider-name" style={{ fontSize: '22px', marginBottom: 0 }}>Claims History</div>
           </div>
-        ))}
-      </div>
+          <div style={{ padding: '8px', border: '0.5px solid var(--color-border-tertiary)', borderRadius: 'var(--border-radius-md)', cursor: 'pointer' }}>
+            <Filter size={18} color="var(--color-text-secondary)" />
+          </div>
+        </div>
 
-      <div className="spacer-lg" />
+        {/* Aggregate Stats */}
+        <div className="gs-card" style={{ padding: '30px', textAlign: 'center', marginBottom: '30px', background: 'var(--color-background-primary)' }}>
+          <div className="gs-section-title" style={{ marginBottom: '8px' }}>Total Payouts to Date</div>
+          <div className="gs-mono" style={{ fontSize: '42px', fontWeight: 500, color: 'var(--color-text-primary)' }}>₹{history.reduce((acc, c) => acc + c.amount, 0).toLocaleString()}</div>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginTop: '16px', color: '#3B6D11', fontSize: '13px', fontWeight: 600 }}>
+            <CheckCircle2 size={16} />
+            <span style={{ letterSpacing: '0.05em' }}>ALL FUNDS SETTLED TO UPI</span>
+          </div>
+        </div>
+
+        {/* Claims List */}
+        <div className="gs-section-title">Settlement Log</div>
+        <div className="gs-card">
+          {history.map((claim, idx) => (
+            <div 
+              key={idx} 
+              className="gs-claim-row" 
+              style={{ padding: '16px 20px' }}
+            >
+              <div className="gs-claim-icon" style={{ background: '#E6F1FB', width: '40px', height: '40px', fontSize: '18px' }}>
+                <CloudRain size={20} color="#185FA5" />
+              </div>
+              <div className="gs-claim-info" style={{ marginLeft: '14px' }}>
+                <div className="gs-claim-type" style={{ fontSize: '15px' }}>Heavy Rainfall · {claim.intensity}</div>
+                <div className="gs-claim-date">{claim.date} · {claim.zone}</div>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div className="gs-mono" style={{ fontSize: '16px', fontWeight: 500, color: '#3B6D11' }}>+₹{claim.amount}</div>
+                <div className="gs-badge-paid gs-claim-badge" style={{ marginTop: '4px' }}>CREDITED</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ marginTop: '30px', textAlign: 'center' }}>
+          <button className="gs-action-btn" style={{ width: 'auto', padding: '10px 24px', fontSize: '12px' }}>Download Statement (Last 30 Days)</button>
+        </div>
+      </div>
     </div>
   );
 };
