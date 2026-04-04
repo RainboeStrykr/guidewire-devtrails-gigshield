@@ -10,12 +10,12 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-// const riderRoutes = require('./routes/riderRoutes');
-// const policyRoutes = require('./routes/policyRoutes');
+const riderRoutes = require('./routes/riderRoutes');
+const policyRoutes = require('./routes/policyRoutes');
 const triggerRoutes = require('./routes/triggerRoutes');
 
-// app.use('/api/riders', riderRoutes);
-// app.use('/api/policies', policyRoutes);
+app.use('/api/riders', riderRoutes);
+app.use('/api/policies', policyRoutes);
 app.use('/api/triggers', triggerRoutes);
 
 app.get('/', (req, res) => {
