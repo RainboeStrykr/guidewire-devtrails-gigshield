@@ -20,6 +20,10 @@ const ClaimsHistoryScreen = () => {
     { date: 'Mar 15, 2026', amount: 550, zone: 'Tambaram', intensity: '60mm/hr', status: 'Credited' },
   ];
 
+  const handleDownload = (label) => {
+    alert(`Generating ${label}... Success! Check your downloads.`);
+  };
+
   return (
     <div className="gs-root">
       <Header />
@@ -35,7 +39,7 @@ const ClaimsHistoryScreen = () => {
             />
             <div className="gs-rider-name" style={{ fontSize: '22px', marginBottom: 0 }}>Claims History</div>
           </div>
-          <div style={{ padding: '8px', border: '0.5px solid var(--color-border-tertiary)', borderRadius: 'var(--border-radius-md)', cursor: 'pointer' }}>
+          <div style={{ padding: '8px', border: '0.5px solid var(--color-border-tertiary)', borderRadius: 'var(--border-radius-md)', cursor: 'pointer' }} onClick={() => alert('Filter options: Rain, AQI, Heat.')}>
             <Filter size={18} color="var(--color-text-secondary)" />
           </div>
         </div>
@@ -75,7 +79,7 @@ const ClaimsHistoryScreen = () => {
         </div>
 
         <div style={{ marginTop: '30px', textAlign: 'center' }}>
-          <button className="gs-action-btn" style={{ width: 'auto', padding: '10px 24px', fontSize: '12px' }}>Download Statement (Last 30 Days)</button>
+          <button className="gs-action-btn" style={{ width: 'auto', padding: '10px 24px', fontSize: '12px' }} onClick={() => handleDownload('Historical Payout Statement')}>Download Statement (Last 30 Days)</button>
         </div>
       </div>
     </div>

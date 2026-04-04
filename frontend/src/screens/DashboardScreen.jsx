@@ -8,29 +8,81 @@ const DashboardScreen = () => {
   const [rider, setRider] = useState(null);
   const [policy, setPolicy] = useState(null);
   const [selectedTier, setSelectedTier] = useState('standard');
+  const [isRenewing, setIsRenewing] = useState(false);
+  const [showRenewalToast, setShowRenewalToast] = useState(false);
 
   useEffect(() => {
     const savedRider = localStorage.getItem('rider');
     const savedPolicy = localStorage.getItem('policy');
     if (savedRider) setRider(JSON.parse(savedRider));
-    if (savedPolicy) setPolicy(JSON.parse(savedPolicy));
+    if (savedPolicy) {
+      const p = JSON.parse(savedPolicy);
+      setPolicy(p);
+      setSelectedTier(p.tier?.toLowerCase() || 'standard');
+    }
   }, []);
+
+  const handleRenew = () => {
+    setIsRenewing(true);
+    // Simulate API call
+    setTimeout(() => {
+      const premiums = { basic: 29, standard: 61, pro: 79 };
+      const coverages = { basic: 500, standard: 900, pro: 1500 };
+      
+      const updatedPolicy = {
+        ...policy,
+        tier: selectedTier.charAt(0).toUpperCase() + selectedTier.slice(1),
+        premium: premiums[selectedTier],
+        maxCoverage: coverages[selectedTier]
+      };
+      
+      setPolicy(updatedPolicy);
+      localStorage.setItem('policy', JSON.stringify(updatedPolicy));
+      setIsRenewing(false);
+      setShowRenewalToast(true);
+      setTimeout(() => setShowRenewalToast(false), 3000);
+    }, 1500);
+  };
+
+  const handleDownload = (label) => {
+    alert(`Generating ${label}... Check your downloads folder.`);
+  };
 
   return (
     <div className="gs-root">
       <Header />
+      
+      {showRenewalToast && (
+        <div style={{
+          position: 'fixed',
+          top: '80px',
+          right: '20px',
+          background: '#3B6D11',
+          color: 'white',
+          padding: '12px 24px',
+          borderRadius: 'var(--border-radius-lg)',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+          zIndex: 2000,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px'
+        }}>
+          <div style={{ background: 'white', borderRadius: '50%', color: '#3B6D11', padding: '2px' }}><CheckCircle2 size={16} /></div>
+          <span style={{ fontSize: '13px', fontWeight: 600 }}>Policy Renewed: {policy?.tier} Active</span>
+        </div>
+      )}
 
       {/* Hero */}
       <div className="gs-hero">
         <div>
           <div className="gs-rider-name">{rider?.name || 'Rajan Kumar'}</div>
           <div className="gs-rider-meta">
-            <span className="gs-platform-badge">{rider?.platform || 'Blinkit'}</span>
+            <span className="gs-platform-badge" onClick={() => navigate('/onboarding')} style={{ cursor: 'pointer' }}>{rider?.platform || 'Blinkit'}</span>
             <span className="gs-zone-tag">📍 {rider?.zone || 'Velachery'}, Chennai</span>
             <span className="gs-zone-tag">Fraud score <strong style={{ color: 'var(--color-text-primary)' }}>{rider?.fraudScore || 12}</strong> / 100</span>
           </div>
         </div>
-        <div className="gs-policy-card">
+        <div className="gs-policy-card" onClick={() => navigate('/policy')} style={{ cursor: 'pointer' }}>
           <div className="gs-policy-label">Active Policy</div>
           <div className="gs-policy-tier">{policy?.tier || 'Standard'}</div>
           <div className="gs-policy-sub"><span className="gs-status-dot"></span>Protected · Mon 31 Mar – Sun 6 Apr</div>
@@ -45,6 +97,7 @@ const DashboardScreen = () => {
           </div>
         </div>
       </div>
+
 
       {/* Metrics */}
       <div className="gs-metrics">
@@ -251,7 +304,13 @@ const DashboardScreen = () => {
             </div>
           </div>
 
-          <button className="gs-action-btn primary" onClick={() => navigate('/policy')}>Renew Option · ₹{selectedTier === 'basic' ? 29 : selectedTier === 'standard' ? 61 : 79} via UPI auto-debit ↗</button>
+          <button 
+            className="gs-action-btn primary" 
+            onClick={handleRenew} 
+            disabled={isRenewing}
+          >
+            {isRenewing ? 'Confirming via UPI...' : `Renew Option · ₹${selectedTier === 'basic' ? 29 : selectedTier === 'standard' ? 61 : 79} via UPI auto-debit ↗`}
+          </button>
           <button className="gs-action-btn" onClick={() => navigate('/policy')}>View full policy document</button>
 
           <div className="gs-divider"></div>

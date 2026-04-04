@@ -16,6 +16,10 @@ const PolicyDetailsScreen = () => {
     if (savedRider) setRider(JSON.parse(savedRider));
   }, []);
 
+  const handleDownload = (label) => {
+    alert(`Generating ${label}... Success! Check your downloads.`);
+  };
+
   return (
     <div className="gs-root">
       <Header />
@@ -70,7 +74,7 @@ const PolicyDetailsScreen = () => {
 
             <div className="gs-section-title" style={{ marginTop: '30px' }}>Documents & Support</div>
             <div className="gs-card">
-              <div className="gs-claim-row" style={{ cursor: 'pointer' }}>
+              <div className="gs-claim-row" style={{ cursor: 'pointer' }} onClick={() => handleDownload('Policy T&C')}>
                 <div className="gs-claim-icon" style={{ background: 'var(--color-background-secondary)' }}><FileText size={14} /></div>
                 <div className="gs-claim-info">
                   <div className="gs-claim-type">Policy Terms & Conditions</div>
@@ -78,7 +82,7 @@ const PolicyDetailsScreen = () => {
                 </div>
                 <ChevronLeft size={16} style={{ transform: 'rotate(180deg)', opacity: 0.4 }} />
               </div>
-              <div className="gs-claim-row" style={{ cursor: 'pointer' }}>
+              <div className="gs-claim-row" style={{ cursor: 'pointer' }} onClick={() => navigate('/faq')}>
                 <div className="gs-claim-icon" style={{ background: 'var(--color-background-secondary)' }}><Info size={14} /></div>
                 <div className="gs-claim-info">
                   <div className="gs-claim-type">Help Center & FAQs</div>
@@ -119,7 +123,7 @@ const PolicyDetailsScreen = () => {
                 </div>
               </div>
 
-              <button className="gs-action-btn primary" style={{ marginTop: '24px', marginBottom: 0 }}>Download Certificate</button>
+              <button className="gs-action-btn primary" style={{ marginTop: '24px', marginBottom: 0 }} onClick={() => handleDownload('Insurance Certificate')}>Download Certificate</button>
             </div>
 
             <div className="gs-card" style={{ padding: '16px', background: '#FFFBF2', borderColor: '#F2E2C2' }}>

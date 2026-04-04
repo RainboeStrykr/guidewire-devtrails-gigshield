@@ -1,124 +1,164 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CloudRain, CheckCircle2, ChevronLeft, MapPin, Zap } from 'lucide-react';
+import { CloudRain, CheckCircle2, ChevronLeft, Zap } from 'lucide-react';
+import Header from '../components/Header';
+import '../gs-styles.css';
 
 const TriggerAlertScreen = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
+  const [rider, setRider] = useState(null);
 
-  // Simulate progress
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (step < 3) setStep(step + 1);
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, [step]);
+    const savedRider = localStorage.getItem('rider');
+    if (savedRider) setRider(JSON.parse(savedRider));
+
+    const timer = setInterval(() => {
+      setStep(prev => (prev < 4 ? prev + 1 : 4));
+    }, 2500);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
-    <div className="page-container" style={{ backgroundColor: 'var(--surface-container-low)' }}>
-      {/* Header */}
-      <header style={{ display: 'flex', alignItems: 'center', marginBottom: '2rem' }}>
-        <ChevronLeft 
-          size={24} 
-          onClick={() => navigate('/dashboard')} 
-          style={{ cursor: 'pointer', marginRight: '1rem' }} 
-        />
-        <h2 style={{ fontSize: '1.25rem' }}>Live Alert</h2>
-      </header>
+    <div className="gs-root">
+      <Header />
 
-      {/* Alert Card */}
-      <div className="card-lowest status-shield" style={{ marginBottom: '1.5rem', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
-          <div style={{ padding: '0.75rem', backgroundColor: 'rgba(131, 85, 0, 0.1)', borderRadius: '1rem', color: 'var(--secondary)' }}>
-            <Zap size={24} />
-          </div>
+      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '30px 20px' }}>
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '24px' }}>
+          <ChevronLeft 
+            size={24} 
+            onClick={() => navigate('/dashboard')} 
+            style={{ cursor: 'pointer', marginRight: '12px' }} 
+          />
+          <div className="gs-rider-name" style={{ fontSize: '22px', marginBottom: 0 }}>System Trigger · Active Monitor</div>
+        </div>
+
+        <div className="gs-body" style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '24px' }}>
+          {/* Main Column */}
           <div>
-            <h3 style={{ color: 'var(--secondary)', fontSize: '1rem', fontWeight: '800' }}>TRIGGER DETECTED</h3>
-            <p className="text-subtext">Heavy Rainfall in your zone</p>
+            <div className="gs-alert-card" style={{ border: '1px solid #BA7517', background: '#FFFBF2' }}>
+              <div className="gs-alert-header" style={{ background: 'transparent' }}>
+                <div className="gs-alert-icon heat" style={{ background: '#FCEBEB', color: '#791F1F' }}>
+                  <Zap size={20} />
+                </div>
+                <div>
+                  <div className="gs-alert-title" style={{ color: '#BA7517', fontWeight: 800 }}>HAZARD TRIGGER DETECTED</div>
+                  <div className="gs-alert-zone">Station CH-04 · {rider?.zone || 'Velachery'}</div>
+                </div>
+                <div className="gs-alert-status active" style={{ animation: 'pulse-bg 2s infinite' }}>● EMERGENCY</div>
+              </div>
+              <div className="gs-alert-body" style={{ padding: '24px', gridTemplateColumns: 'repeat(2, 1fr)' }}>
+                <div className="gs-alert-stat">
+                  <div className="gs-alert-stat-label">Intensity Recorded</div>
+                  <div className="gs-mono" style={{ fontSize: '32px', fontWeight: 500 }}>28<span style={{ fontSize: '14px' }}>mm/h</span></div>
+                </div>
+                <div className="gs-alert-stat" style={{ textAlign: 'right' }}>
+                  <div className="gs-alert-stat-label">Threshold Delta</div>
+                  <div className="gs-mono" style={{ fontSize: '32px', fontWeight: 500, color: '#3B6D11' }}>+8<span style={{ fontSize: '14px' }}>mm</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div className="gs-section-title" style={{ marginTop: '20px' }}>Parametric Payout Pipeline</div>
+            <div className="gs-card" style={{ padding: '30px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'center', opacity: step >= 1 ? 1 : 0.3 }}>
+                  <div style={{ color: step >= 1 ? '#3B6D11' : 'var(--color-text-tertiary)' }}><CheckCircle2 size={24} /></div>
+                  <div>
+                    <div style={{ fontWeight: 600, fontSize: '15px' }}>Atmospheric Verification</div>
+                    <div style={{ fontSize: '13px', color: 'var(--color-text-tertiary)' }}>Confirmed via IMD Satellite and Ground Station 402</div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'center', opacity: step >= 2 ? 1 : 0.3 }}>
+                  <div style={{ color: step >= 2 ? '#3B6D11' : 'var(--color-text-tertiary)' }}><CheckCircle2 size={24} /></div>
+                  <div>
+                    <div style={{ fontWeight: 600, fontSize: '15px' }}>Smart Contract Execution</div>
+                    <div style={{ fontSize: '13px', color: 'var(--color-text-tertiary)' }}>Policy logic applied: Standard Tier · ₹70/30min</div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'center', opacity: step >= 3 ? 1 : 0.3 }}>
+                  <div style={{ color: step >= 3 ? '#3B6D11' : 'var(--color-text-tertiary)' }}><CheckCircle2 size={24} /></div>
+                  <div>
+                    <div style={{ fontWeight: 600, fontSize: '15px' }}>Fraud & Integrity Check</div>
+                    <div style={{ fontSize: '13px', color: 'var(--color-text-tertiary)' }}>Location proof verified via Blinkit Partner GPS</div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'center', opacity: step >= 4 ? 1 : 0.3 }}>
+                  <div style={{ color: step >= 4 ? '#3B6D11' : 'var(--color-text-tertiary)' }}><CheckCircle2 size={24} /></div>
+                  <div>
+                    <div style={{ fontWeight: 600, fontSize: '15px' }}>Instant UPI Settlement</div>
+                    <div style={{ fontSize: '13px', color: 'var(--color-text-tertiary)' }}>Transferring ₹210 to registered VPA</div>
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ marginTop: '40px' }}>
+                <div className="gs-progress-label">
+                  <span>Settlement Progress</span>
+                  <span>{Math.round((step / 4) * 100)}%</span>
+                </div>
+                <div className="gs-progress-bar" style={{ height: '8px' }}>
+                  <div className="gs-progress-fill gs-fill-blue" style={{ width: `${(step / 4) * 100}%`, height: '100%', transition: 'width 1s ease' }}></div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-        
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'var(--surface-container-low)', padding: '1rem', borderRadius: '1rem' }}>
+
+          {/* Sidebar */}
           <div>
-            <p className="text-subtext">Current intensity</p>
-            <h4 style={{ fontSize: '1.5rem' }}>25 <span style={{ fontSize: '0.875rem' }}>mm/hr</span></h4>
-          </div>
-          <div style={{ textAlign: 'right' }}>
-            <p className="text-subtext">Zone</p>
-            <h4 style={{ fontSize: '1rem' }}>Velachery, Zone 4</h4>
-          </div>
-        </div>
-      </div>
-
-      {/* Progress Section */}
-      <div className="card-lowest ghost-border" style={{ padding: '1.5rem', borderRadius: '1.5rem', marginBottom: '1.5rem' }}>
-        <h3 className="text-headline" style={{ marginBottom: '1.5rem', fontSize: '1.1rem' }}>Payout Progress</h3>
-        
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          {/* Step 1 */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', opacity: step >= 1 ? 1 : 0.4 }}>
-            <CheckCircle2 size={24} color={step >= 1 ? 'var(--primary)' : 'var(--outline)'} />
-            <div>
-              <p style={{ fontWeight: '600' }}>Trigger Verified</p>
-              <p className="text-subtext">Data confirmed from station 402</p>
+            <div className="gs-section-title">Live Weather Feed</div>
+            <div className="gs-card" style={{ height: '200px', background: '#000', overflow: 'hidden', position: 'relative' }}>
+              <img 
+                src="https://images.unsplash.com/photo-1534204293159-aa8c5f2cdd73?q=80&w=320&h=200&fit=crop" 
+                alt="Rain feed" 
+                style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.7 }}
+              />
+              <div style={{ position: 'absolute', top: '10px', left: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <div style={{ width: '6px', height: '6px', background: '#FF0000', borderRadius: '50%', animation: 'pulse-dot 1s infinite' }}></div>
+                <div className="gs-mono" style={{ fontSize: '10px', color: '#fff', fontWeight: 700 }}>REC CH-04</div>
+              </div>
+              <div style={{ position: 'absolute', bottom: '10px', right: '10px', color: '#fff', textAlign: 'right' }}>
+                <div className="gs-mono" style={{ fontSize: '9px', opacity: 0.8 }}>LAT: 12.9815</div>
+                <div className="gs-mono" style={{ fontSize: '9px', opacity: 0.8 }}>LNG: 80.2185</div>
+              </div>
             </div>
-          </div>
 
-          {/* Step 2 */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', opacity: step >= 2 ? 1 : 0.4 }}>
-            <CheckCircle2 size={24} color={step >= 2 ? 'var(--primary)' : 'var(--outline)'} />
-            <div>
-              <p style={{ fontWeight: '600' }}>Claim Approved</p>
-              <p className="text-subtext">Earnings impact calculated</p>
-            </div>
-          </div>
-
-          {/* Step 3 */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', opacity: step >= 3 ? 1 : 0.4 }}>
-            <CheckCircle2 size={24} color={step == 3 ? '#43a047' : 'var(--outline)'} />
-            <div>
-              <p style={{ fontWeight: '600' }}>Payout Initiated</p>
-              <p className="text-subtext">Transferring ₹210 to GPay ID</p>
+            <div className="gs-section-title" style={{ marginTop: '20px' }}>Coverage Stats</div>
+            <div className="gs-card" style={{ padding: '16px' }}>
+              <div style={{ fontSize: '12px', color: 'var(--color-text-tertiary)', marginBottom: '4px' }}>Active Session</div>
+              <div className="gs-mono" style={{ fontSize: '18px', fontWeight: 500, marginBottom: '12px' }}>1h 40m</div>
+              
+              <div style={{ fontSize: '12px', color: 'var(--color-text-tertiary)', marginBottom: '4px' }}>Payout Earned</div>
+              <div className="gs-mono" style={{ fontSize: '18px', fontWeight: 500, color: '#3B6D11' }}>₹140.00</div>
+              
+              <div className="gs-divider"></div>
+              
+              <button 
+                className="gs-action-btn primary" 
+                onClick={() => navigate('/dashboard')}
+                style={{ marginBottom: 0 }}
+              >
+                Back to Dashboard
+              </button>
             </div>
           </div>
         </div>
-
-        {/* Animated Progress Bar */}
-        <div style={{ marginTop: '2rem' }}>
-          <div className="payout-progress">
-            <div 
-              className="payout-progress-fill" 
-              style={{ width: `${(step / 3) * 100}%` }}
-            ></div>
-          </div>
-        </div>
       </div>
-
-      {/* Live Feed Section */}
-      <div className="card-lowest ghost-border" style={{ padding: '1.5rem', borderRadius: '1.5rem', marginBottom: '1.5rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-          <div style={{ width: '8px', height: '8px', backgroundColor: '#ba1a1a', borderRadius: '50%', animation: 'pulse 1.5s infinite' }}></div>
-          <p style={{ fontWeight: '700', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Live weather feed</p>
-        </div>
-        <div style={{ backgroundColor: 'var(--primary)', width: '100%', height: '180px', borderRadius: '1rem', overflow: 'hidden', position: 'relative' }}>
-          {/* Placeholder for GenAI generated image */}
-          <img src="https://images.unsplash.com/photo-1534274988757-a28bf1f539cf?q=80&w=390&h=180&fit=crop" alt="Rainy Chennai Station" style={{ opacity: 0.6, width: '100%', height: '100%', objectFit: 'crop' }} />
-          <div style={{ position: 'absolute', bottom: '1rem', left: '1rem', color: 'white' }}>
-            <p style={{ fontSize: '0.75rem', fontWeight: '700' }}>VELACHERY STATION ZONE 4</p>
-            <p style={{ fontSize: '0.65rem', opacity: 0.8 }}>Recorded: Todayat 14:45</p>
-          </div>
-        </div>
-      </div>
-
-      <button className="btn-primary" onClick={() => navigate('/dashboard')}>
-        BACK TO DASHBOARD
-      </button>
 
       <style>{`
-        @keyframes pulse {
+        @keyframes pulse-dot {
           0% { transform: scale(1); opacity: 1; }
           50% { transform: scale(1.5); opacity: 0.5; }
           100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes pulse-bg {
+          0% { background: #EAF3DE; }
+          50% { background: #FFDADA; }
+          100% { background: #EAF3DE; }
         }
       `}</style>
     </div>
