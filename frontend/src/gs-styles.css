@@ -12,7 +12,15 @@
   --border-radius-lg: 12px;
 }
 
-.gs-root { font-family: 'Barlow', sans-serif; padding: 0; background: #fff; }
+.gs-root { 
+  font-family: 'Barlow', sans-serif; 
+  padding: 0; 
+  background: #fff; 
+  max-width: 1000px; 
+  margin: 0 auto;
+  box-shadow: 0 0 20px rgba(0,0,0,0.05);
+  min-height: 100vh;
+}
 .gs-mono { font-family: 'DM Mono', monospace; }
 .gs-heading { font-family: 'Barlow Condensed', sans-serif; }
 
@@ -94,7 +102,6 @@
 .gs-alert-status.monitor { background: #FAEEDA; color: #633806; }
 .gs-alert-status.clear { background: var(--color-background-secondary); color: var(--color-text-secondary); }
 .gs-alert-body { padding: 12px 14px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-.gs-alert-stat { }
 .gs-alert-stat-label { font-size: 11px; color: var(--color-text-tertiary); margin-bottom: 2px; }
 .gs-alert-stat-val { font-family: 'DM Mono', monospace; font-size: 15px; color: var(--color-text-primary); font-weight: 500; }
 .gs-progress-wrap { padding: 0 14px 12px; }
