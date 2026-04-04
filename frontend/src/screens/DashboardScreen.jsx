@@ -1,16 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Shield, TrendingUp, History, User, MapPin, CloudRain } from 'lucide-react';
 
 const DashboardScreen = () => {
   const navigate = useNavigate();
+  const [rider, setRider] = useState(null);
+  const [policy, setPolicy] = useState(null);
+
+  useEffect(() => {
+    const savedRider = localStorage.getItem('rider');
+    const savedPolicy = localStorage.getItem('policy');
+    if (savedRider) setRider(JSON.parse(savedRider));
+    if (savedPolicy) setPolicy(JSON.parse(savedPolicy));
+  }, []);
 
   return (
     <div className="page-container" style={{ paddingBottom: '5rem' }}>
       {/* Header */}
       <header style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <p className="text-subtext">Welcome back, Rajesh</p>
+          <p className="text-subtext">Welcome back, {rider?.name || 'Rider'}</p>
           <h2 style={{ fontSize: '1.75rem' }}>The Guardian</h2>
         </div>
         <div style={{ padding: '0.75rem', backgroundColor: 'var(--surface-container-low)', borderRadius: '1rem', color: 'var(--primary)' }}>
@@ -21,7 +30,7 @@ const DashboardScreen = () => {
       {/* Primary Stat Card */}
       <div className="primary-gradient" style={{ padding: '2rem', borderRadius: '1.5rem', color: 'var(--on-primary)', marginBottom: '1.5rem' }}>
         <p style={{ opacity: 0.8, fontSize: '0.875rem', fontWeight: '500' }}>Active Earnings Protection</p>
-        <h1 style={{ fontSize: '3rem', margin: '0.5rem 0' }}>₹4,500 <span style={{ fontSize: '1rem', opacity: 0.8 }}>max payout</span></h1>
+        <h1 style={{ fontSize: '3rem', margin: '0.5rem 0' }}>₹{policy?.maxCoverage || '0'} <span style={{ fontSize: '1rem', opacity: 0.8 }}>max payout</span></h1>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', backgroundColor: 'rgba(255, 255, 255, 0.1)', padding: '0.5rem 1rem', borderRadius: '9999px', alignSelf: 'flex-start', display: 'inline-flex' }}>
           <Shield size={16} />
           <span style={{ fontSize: '0.75rem', fontWeight: '700' }}>COVERAGE ACTIVE</span>
@@ -50,8 +59,8 @@ const DashboardScreen = () => {
       <div className="card-lowest ghost-border" style={{ padding: '1.5rem', borderRadius: '1.5rem', marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
           <h3 className="text-headline">Live Zone Status</h3>
-          <span style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--primary)', backgroundColor: 'var(--surface-container-low)', padding: '0.25rem 0.75rem', borderRadius: '9999px' }}>
-            VELACHERY
+          <span style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--primary)', backgroundColor: 'var(--surface-container-low)', padding: '0.25rem 0.75rem', borderRadius: '9999px', textTransform: 'uppercase' }}>
+            {rider?.zone || 'VELACHERY'}
           </span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -59,7 +68,7 @@ const DashboardScreen = () => {
             <MapPin size={24} />
           </div>
           <div>
-            <p style={{ fontWeight: '600' }}>Zone 4 Station</p>
+            <p style={{ fontWeight: '600' }}>{rider?.zone || 'Zone 4'} Station</p>
             <p className="text-subtext">Status: <strong>Moderate Rain</strong></p>
             <p className="text-subtext" style={{ fontSize: '0.7rem' }}>Trigger Threshold: <strong>20mm/hr</strong></p>
           </div>

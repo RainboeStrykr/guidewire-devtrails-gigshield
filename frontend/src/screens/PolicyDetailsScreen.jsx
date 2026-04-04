@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, FileText, Info, Shield, CheckCircle2 } from 'lucide-react';
 
 const PolicyDetailsScreen = () => {
   const navigate = useNavigate();
+  const [policy, setPolicy] = useState(null);
+
+  useEffect(() => {
+    const savedPolicy = localStorage.getItem('policy');
+    if (savedPolicy) setPolicy(JSON.parse(savedPolicy));
+  }, []);
 
   return (
     <div className="page-container" style={{ backgroundColor: 'var(--surface-container-low)' }}>
@@ -21,8 +27,8 @@ const PolicyDetailsScreen = () => {
       <div className="card-lowest status-shield" style={{ marginBottom: '1.5rem', padding: '1.5rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
           <div>
-            <h3 className="text-headline">Guardian Pro</h3>
-            <p className="text-subtext">Policy #GS-8829-X</p>
+            <h3 className="text-headline">Guardian {policy?.tier || 'Pro'}</h3>
+            <p className="text-subtext">Policy #{policy?.id || 'GS-8829-X'}</p>
           </div>
           <div style={{ backgroundColor: 'var(--primary-container)', color: 'white', padding: '0.25rem 0.75rem', borderRadius: '0.5rem', fontSize: '0.75rem', fontWeight: '700' }}>
             ACTIVE
@@ -31,12 +37,12 @@ const PolicyDetailsScreen = () => {
         
         <div style={{ padding: '1rem', backgroundColor: 'var(--surface-container-low)', borderRadius: '1rem', marginTop: '1rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-            <span className="text-subtext">Monthly Premium</span>
-            <span style={{ fontWeight: '700' }}>₹299</span>
+            <span className="text-subtext">Weekly Premium</span>
+            <span style={{ fontWeight: '700' }}>₹{policy?.premium || '29'}</span>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span className="text-subtext">Max Coverage</span>
-            <span style={{ fontWeight: '700' }}>₹4,500</span>
+            <span style={{ fontWeight: '700' }}>₹{policy?.maxCoverage || '4,500'}</span>
           </div>
         </div>
       </div>

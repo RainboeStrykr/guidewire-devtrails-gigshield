@@ -1,10 +1,18 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShieldCheck, ArrowRight, CheckCircle2, ChevronLeft } from 'lucide-react';
+import { ShieldCheck, ArrowRight, CheckCircle2, ChevronLeft, Loader2 } from 'lucide-react';
+import { onboardRider, issuePolicy } from '../services/api';
 
 const OnboardingScreen = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    zone: 'Velachery',
+    platform: 'Zepto'
+  });
 
   const steps = [
     {
@@ -16,15 +24,41 @@ const OnboardingScreen = () => {
       title: "Real-time Thresholds",
       description: "We monitor local weather stations. If rainfall exceeds 20mm/hr in your active zone, you get paid instantly.",
       icon: <CheckCircle2 size={48} />
+    },
+    {
+      title: "Your Details",
+      description: "Let's set up your profile.",
+      icon: <CheckCircle2 size={48} />,
+      isForm: true
     }
   ];
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (step < steps.length) {
       setStep(step + 1);
     } else {
-      navigate('/dashboard');
+      try {
+        setLoading(true);
+        const riderRes = await onboardRider(formData);
+        const policyRes = await issuePolicy({
+          riderId: riderRes.rider.id,
+          tier: 'Pro'
+        });
+        // Save to local storage for demo purposes
+        localStorage.setItem('rider', JSON.stringify(riderRes.rider));
+        localStorage.setItem('policy', JSON.stringify(policyRes.policy));
+        navigate('/dashboard');
+      } catch (error) {
+        console.error("Failed to onboard:", error);
+      } finally {
+        setLoading(false);
+      }
     }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   return (
@@ -43,6 +77,47 @@ const OnboardingScreen = () => {
         <p className="text-subtext" style={{ fontSize: '1.125rem', lineHeight: '1.6' }}>
           {steps[step-1].description}
         </p>
+
+        {steps[step-1].isForm && (
+          <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <input 
+              type="text" 
+              name="name"
+              placeholder="Your Name" 
+              value={formData.name}
+              onChange={handleInputChange}
+              style={{ padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--outline-variant)' }}
+            />
+            <input 
+              type="tel" 
+              name="phone"
+              placeholder="Phone Number" 
+              value={formData.phone}
+              onChange={handleInputChange}
+              style={{ padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--outline-variant)' }}
+            />
+            <select 
+              name="zone"
+              value={formData.zone}
+              onChange={handleInputChange}
+              style={{ padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--outline-variant)', backgroundColor: 'white' }}
+            >
+              <option value="Velachery">Velachery</option>
+              <option value="Adyar">Adyar</option>
+              <option value="Anna Nagar">Anna Nagar</option>
+            </select>
+            <select 
+              name="platform"
+              value={formData.platform}
+              onChange={handleInputChange}
+              style={{ padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--outline-variant)', backgroundColor: 'white' }}
+            >
+              <option value="Zepto">Zepto</option>
+              <option value="Blinkit">Blinkit</option>
+              <option value="Instamart">Swiggy Instamart</option>
+            </select>
+          </div>
+        )}
       </div>
 
       <div style={{ marginBottom: '2rem' }}>
@@ -65,10 +140,17 @@ const OnboardingScreen = () => {
         <button 
           className="btn-primary" 
           onClick={handleNext}
+          disabled={loading}
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
         >
-          {step === steps.length ? 'GET STARTED' : 'CONTINUE'}
-          <ArrowRight size={20} />
+          {loading ? (
+             <Loader2 size={20} className="animate-spin" />
+          ) : (
+            <>
+              {step === steps.length ? 'GET STARTED' : 'CONTINUE'}
+              <ArrowRight size={20} />
+            </>
+          )}
         </button>
       </div>
     </div>
