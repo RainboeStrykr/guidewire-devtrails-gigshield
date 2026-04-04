@@ -18,7 +18,7 @@ const OnboardingScreen = () => {
     {
       title: "Protect Your Daily Income",
       description: "Parametric insurance covers you automatically when conditions (like heavy rain) affect your ability to deliver.",
-      icon: <ShieldCheck size={48} />
+      icon: <img src="/logo.png" alt="GigShield Logo" style={{ height: '60px', width: 'auto' }} />
     },
     {
       title: "Real-time Thresholds",

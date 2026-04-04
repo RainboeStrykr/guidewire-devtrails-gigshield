@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { CheckCircle2 } from 'lucide-react';
 import Header from '../components/Header';
 import '../gs-styles.css';
 

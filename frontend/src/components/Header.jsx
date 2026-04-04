@@ -33,7 +33,7 @@ const Header = () => {
   return (
     <div className="gs-nav" style={{ position: 'relative' }}>
       <div className="gs-logo" onClick={() => navigate('/dashboard')} style={{ cursor: 'pointer' }}>
-        <div className="gs-logo-dot"></div>
+        <img src="/logo.png" alt="GigShield Logo" style={{ height: '28px', width: 'auto', marginRight: '4px' }} />
         GigShield
       </div>
       <div className="gs-nav-pills">

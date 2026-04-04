@@ -19,13 +19,10 @@ const LoginScreen = () => {
       <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
         <div style={{ 
           display: 'inline-flex', 
-          backgroundColor: 'var(--primary-container)', 
-          color: 'var(--on-primary)', 
-          padding: '1.25rem', 
-          borderRadius: '1.5rem',
-          marginBottom: '1.5rem'
+          backgroundColor: 'transparent', 
+          marginBottom: '1rem'
         }}>
-          <ShieldCheck size={48} />
+          <img src="/logo.png" alt="GigShield Logo" style={{ height: '80px', width: 'auto' }} />
         </div>
         <h1 className="text-display">GigShield</h1>
         <p className="text-subtext">The Guardian for Gig Professionals</p>
