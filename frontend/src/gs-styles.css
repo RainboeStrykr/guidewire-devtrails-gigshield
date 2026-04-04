@@ -1,0 +1,180 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&family=DM+Mono:wght@400;500&family=Barlow:wght@400;500&display=swap');
+
+:root {
+  --color-border-tertiary: #e0e0e0;
+  --color-border-secondary: #c0c0c0;
+  --color-text-primary: #111;
+  --color-text-secondary: #555;
+  --color-text-tertiary: #888;
+  --color-background-primary: #fff;
+  --color-background-secondary: #f4f4f4;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+}
+
+.gs-root { font-family: 'Barlow', sans-serif; padding: 0; background: #fff; }
+.gs-mono { font-family: 'DM Mono', monospace; }
+.gs-heading { font-family: 'Barlow Condensed', sans-serif; }
+
+.gs-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 0.5px solid var(--color-border-tertiary);
+  margin-bottom: 0;
+}
+.gs-logo { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--color-text-primary); display: flex; align-items: center; gap: 8px; }
+.gs-logo-dot { width: 10px; height: 10px; border-radius: 50%; background: #BA7517; display: inline-block; }
+.gs-nav-pills { display: flex; gap: 4px; }
+.gs-pill { font-size: 12px; padding: 4px 10px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-tertiary); color: var(--color-text-secondary); cursor: pointer; background: transparent; transition: background 0.15s; }
+.gs-pill.active { background: var(--color-background-secondary); color: var(--color-text-primary); border-color: var(--color-border-secondary); }
+.gs-avatar { width: 32px; height: 32px; border-radius: 50%; background: #FAEEDA; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: #633806; }
+
+.gs-hero {
+  padding: 20px 20px 0;
+  display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: start;
+}
+.gs-rider-name { font-family: 'Barlow Condensed', sans-serif; font-size: 28px; font-weight: 700; color: var(--color-text-primary); line-height: 1; margin-bottom: 4px; }
+.gs-rider-meta { font-size: 13px; color: var(--color-text-secondary); display: flex; gap: 12px; align-items: center; }
+.gs-platform-badge { font-size: 11px; padding: 2px 8px; border-radius: var(--border-radius-md); background: #FAEEDA; color: #633806; font-weight: 500; }
+.gs-zone-tag { font-size: 12px; color: var(--color-text-tertiary); }
+
+.gs-policy-card {
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  padding: 14px 16px;
+  min-width: 200px;
+}
+.gs-policy-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-tertiary); margin-bottom: 6px; }
+.gs-policy-tier { font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 700; color: var(--color-text-primary); }
+.gs-policy-sub { font-size: 12px; color: var(--color-text-secondary); margin-top: 2px; }
+.gs-status-dot { width: 7px; height: 7px; border-radius: 50%; background: #639922; display: inline-block; margin-right: 4px; animation: pulse-dot 2s infinite; }
+@keyframes pulse-dot { 0%,100%{ opacity:1; } 50%{ opacity:0.4; } }
+
+.gs-metrics {
+  padding: 16px 20px;
+  display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px;
+}
+@media (max-width: 600px) {
+  .gs-hero { grid-template-columns: 1fr; }
+  .gs-metrics { grid-template-columns: 1fr 1fr; }
+  .gs-body { grid-template-columns: 1fr; }
+}
+.gs-metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px 14px; }
+.gs-metric-label { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+.gs-metric-val { font-family: 'DM Mono', monospace; font-size: 22px; font-weight: 500; color: var(--color-text-primary); line-height: 1; }
+.gs-metric-unit { font-size: 12px; color: var(--color-text-tertiary); margin-top: 2px; }
+.gs-metric-delta { font-size: 11px; margin-top: 4px; }
+.gs-delta-up { color: #3B6D11; }
+.gs-delta-down { color: #A32D2D; }
+
+.gs-body { padding: 0 20px 20px; display: grid; grid-template-columns: 1fr 340px; gap: 16px; align-items: start; }
+@media (max-width: 768px) {
+  .gs-body { grid-template-columns: 1fr; }
+}
+
+.gs-section-title { font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 600; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+
+.gs-alert-card {
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.gs-alert-header { padding: 12px 14px; display: flex; align-items: center; gap: 10px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.gs-alert-icon { width: 32px; height: 32px; border-radius: var(--border-radius-md); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.gs-alert-icon.rain { background: #E6F1FB; }
+.gs-alert-icon.aqi { background: #FAEEDA; }
+.gs-alert-icon.heat { background: #FAECE7; }
+.gs-alert-title { font-weight: 500; font-size: 14px; color: var(--color-text-primary); }
+.gs-alert-zone { font-size: 12px; color: var(--color-text-secondary); }
+.gs-alert-status { margin-left: auto; font-size: 11px; padding: 3px 8px; border-radius: var(--border-radius-md); }
+.gs-alert-status.active { background: #EAF3DE; color: #27500A; }
+.gs-alert-status.monitor { background: #FAEEDA; color: #633806; }
+.gs-alert-status.clear { background: var(--color-background-secondary); color: var(--color-text-secondary); }
+.gs-alert-body { padding: 12px 14px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.gs-alert-stat { }
+.gs-alert-stat-label { font-size: 11px; color: var(--color-text-tertiary); margin-bottom: 2px; }
+.gs-alert-stat-val { font-family: 'DM Mono', monospace; font-size: 15px; color: var(--color-text-primary); font-weight: 500; }
+.gs-progress-wrap { padding: 0 14px 12px; }
+.gs-progress-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--color-text-secondary); margin-bottom: 5px; }
+.gs-progress-bar { height: 4px; background: var(--color-background-secondary); border-radius: 2px; overflow: hidden; }
+.gs-progress-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+.gs-fill-amber { background: #BA7517; }
+.gs-fill-blue { background: #185FA5; }
+.gs-fill-red { background: #A32D2D; }
+.gs-fill-green { background: #3B6D11; }
+
+.gs-claim-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 0.5px solid var(--color-border-tertiary);
+}
+.gs-claim-row:last-child { border-bottom: none; }
+.gs-claim-icon { width: 28px; height: 28px; border-radius: var(--border-radius-md); display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+.gs-claim-info { flex: 1; min-width: 0; }
+.gs-claim-type { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+.gs-claim-date { font-size: 11px; color: var(--color-text-tertiary); }
+.gs-claim-amount { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; }
+.gs-claim-badge { font-size: 10px; padding: 2px 6px; border-radius: var(--border-radius-md); }
+.gs-badge-paid { background: #EAF3DE; color: #27500A; }
+.gs-badge-pending { background: #FAEEDA; color: #633806; }
+.gs-badge-flagged { background: #FCEBEB; color: #791F1F; }
+
+.gs-tier-row { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.gs-tier-card {
+  flex: 1;
+  min-width: 100px;
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  padding: 12px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.gs-tier-card.selected { border: 2px solid #BA7517; }
+.gs-tier-name { font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 700; color: var(--color-text-primary); }
+.gs-tier-price { font-family: 'DM Mono', monospace; font-size: 20px; font-weight: 500; color: var(--color-text-primary); margin: 4px 0 2px; }
+.gs-tier-week { font-size: 11px; color: var(--color-text-tertiary); }
+.gs-tier-payout { font-size: 11px; color: var(--color-text-secondary); margin-top: 6px; }
+.gs-tier-hrs { font-size: 11px; color: var(--color-text-secondary); }
+
+.gs-map-placeholder {
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-md);
+  height: 130px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 10px;
+  position: relative; overflow: hidden;
+}
+.gs-map-grid { position: absolute; inset: 0; opacity: 0.3; }
+.gs-zone-marker { position: absolute; width: 12px; height: 12px; border-radius: 50%; }
+.gs-zone-label { position: absolute; font-size: 10px; font-family: 'DM Mono', monospace; }
+.gs-map-label { font-size: 12px; color: var(--color-text-secondary); font-family: 'DM Mono', monospace; z-index: 1; }
+
+.gs-action-btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: var(--border-radius-md);
+  border: 0.5px solid var(--color-border-secondary);
+  background: var(--color-background-primary);
+  font-family: 'Barlow', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  text-align: center;
+  margin-bottom: 8px;
+}
+.gs-action-btn.primary { background: #BA7517; color: #FAEEDA; border-color: #BA7517; }
+
+.gs-divider { height: 0.5px; background: var(--color-border-tertiary); margin: 14px 0; }
+.gs-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); margin-bottom: 14px; }
+
+.gs-trigger-row { padding: 10px 14px; display: flex; align-items: center; gap: 10px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.gs-trigger-row:last-child { border-bottom: none; }
+.gs-trigger-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.gs-trigger-name { font-size: 13px; color: var(--color-text-primary); flex: 1; }
+.gs-trigger-val { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--color-text-secondary); }
+.gs-trigger-threshold { font-size: 11px; color: var(--color-text-tertiary); }
