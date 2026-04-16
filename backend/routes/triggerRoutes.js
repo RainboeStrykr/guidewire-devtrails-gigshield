@@ -1,8 +1,8 @@
-const express = require('express');
 const { getTriggerAlerts, simulateTrigger } = require('../controllers/triggerController');
-const router = express.Router();
 
-router.get('/alerts', getTriggerAlerts);
-router.post('/simulate', simulateTrigger);
+async function triggerRoutes(fastify, options) {
+  fastify.get('/alerts', getTriggerAlerts);
+  fastify.post('/simulate', simulateTrigger);
+}
 
-module.exports = router;
+module.exports = triggerRoutes;

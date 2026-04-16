@@ -1,29 +1,22 @@
 const Rider = require('../models/Rider');
 
-const onboarding = async (req, res) => {
+const onboarding = async (request, reply) => {
     try {
-        const { name, phone, zone, platform } = req.body;
+        const { name, phone, zone, platform } = request.body;
         
         if (!name || !phone || !zone || !platform) {
-            return res.status(400).json({ message: 'All fields are required' });
+            return reply.code(400).send({ message: 'All fields are required' });
         }
 
-        // Check if rider already exists
         let existingRider = await Rider.findOne({ phone });
         if (existingRider) {
-            return res.status(400).json({ message: 'Rider with this phone already exists', rider: existingRider });
+            return reply.code(400).send({ message: 'Rider with this phone already exists', rider: existingRider });
         }
 
-        const newRider = new Rider({
-            name,
-            phone,
-            zone,
-            platform
-        });
-
+        const newRider = new Rider({ name, phone, zone, platform });
         await newRider.save();
 
-        res.status(201).json({ message: 'Rider onboarded successfully', rider: {
+        reply.code(201).send({ message: 'Rider onboarded successfully', rider: {
             id: newRider._id,
             name: newRider.name,
             phone: newRider.phone,
@@ -31,21 +24,21 @@ const onboarding = async (req, res) => {
             platform: newRider.platform
         } });
     } catch (error) {
-        console.error('Error in onboarding:', error);
-        res.status(500).json({ message: 'Server error' });
+        request.log.error('Error in onboarding:', error);
+        reply.code(500).send({ message: 'Server error' });
     }
 };
 
-const getRiderProfile = async (req, res) => {
+const getRiderProfile = async (request, reply) => {
     try {
-        const riderId = req.params.id;
+        const riderId = request.params.id;
         const rider = await Rider.findById(riderId);
 
         if (!rider) {
-            return res.status(404).json({ message: 'Rider not found' });
+            return reply.code(404).send({ message: 'Rider not found' });
         }
 
-        res.json({
+        reply.send({
             id: rider._id,
             name: rider.name,
             phone: rider.phone,
@@ -53,12 +46,9 @@ const getRiderProfile = async (req, res) => {
             platform: rider.platform
         });
     } catch (error) {
-        console.error('Error fetching rider:', error);
-        res.status(500).json({ message: 'Server error' });
+        request.log.error('Error fetching rider:', error);
+        reply.code(500).send({ message: 'Server error' });
     }
 };
 
-module.exports = {
-    onboarding,
-    getRiderProfile
-};
+module.exports = { onboarding, getRiderProfile };

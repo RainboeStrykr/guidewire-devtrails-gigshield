@@ -1,22 +1,21 @@
 const TriggerAlert = require('../models/TriggerAlert');
 
-const getTriggerAlerts = async (req, res) => {
+const getTriggerAlerts = async (request, reply) => {
     try {
-        // Get last 10 alerts
         const alerts = await TriggerAlert.find().sort({ createdAt: -1 }).limit(10);
-        res.json(alerts);
+        reply.send(alerts);
     } catch (error) {
-        console.error('Error fetching alerts:', error);
-        res.status(500).json({ message: 'Server error' });
+        request.log.error('Error fetching alerts:', error);
+        reply.code(500).send({ message: 'Server error' });
     }
 };
 
-const simulateTrigger = async (req, res) => {
+const simulateTrigger = async (request, reply) => {
     try {
-        const { zone, intensity, triggerType } = req.body;
+        const { zone, intensity, triggerType } = request.body;
         
         if (!zone || !intensity) {
-            return res.status(400).json({ message: 'Zone and intensity are required' });
+            return reply.code(400).send({ message: 'Zone and intensity are required' });
         }
 
         const newAlert = new TriggerAlert({
@@ -28,14 +27,11 @@ const simulateTrigger = async (req, res) => {
 
         await newAlert.save();
 
-        res.status(201).json({ message: 'Trigger simulated successfully', alert: newAlert });
+        reply.code(201).send({ message: 'Trigger simulated successfully', alert: newAlert });
     } catch (error) {
-        console.error('Error simulating trigger:', error);
-        res.status(500).json({ message: 'Server error' });
+        request.log.error('Error simulating trigger:', error);
+        reply.code(500).send({ message: 'Server error' });
     }
 };
 
-module.exports = {
-    getTriggerAlerts,
-    simulateTrigger
-};
+module.exports = { getTriggerAlerts, simulateTrigger };
