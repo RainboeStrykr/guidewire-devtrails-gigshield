@@ -1,8 +1,8 @@
-const express = require('express');
 const { onboarding, getRiderProfile } = require('../controllers/riderController');
-const router = express.Router();
 
-router.post('/onboarding', onboarding);
-router.get('/:id', getRiderProfile);
+async function riderRoutes(fastify, options) {
+  fastify.post('/onboarding', onboarding);
+  fastify.get('/:id', getRiderProfile);
+}
 
-module.exports = router;
+module.exports = riderRoutes;

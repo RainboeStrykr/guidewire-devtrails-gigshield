@@ -1,38 +1,36 @@
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
+const path = require('path');
 const dotenv = require('dotenv');
 
-dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, '..', '.env') });
 
-const app = express();
+const fastify = require('fastify')({ logger: true });
+const cors = require('@fastify/cors');
 
-app.use(cors());
-app.use(express.json());
-
-const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/gigshield';
-
-mongoose.connect(mongoURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}).then(() => console.log('MongoDB connected'))
-  .catch(err => console.log('MongoDB connection error:', err));
-
-// Routes
-const riderRoutes = require('./routes/riderRoutes');
-const policyRoutes = require('./routes/policyRoutes');
-const triggerRoutes = require('./routes/triggerRoutes');
-
-app.use('/api/riders', riderRoutes);
-app.use('/api/policies', policyRoutes);
-app.use('/api/triggers', triggerRoutes);
-
-app.get('/', (req, res) => {
-    res.send('GigShield Backend API');
+// Register CORS
+fastify.register(cors, {
+  origin: true,
 });
 
+// Register routes
+fastify.register(require('./routes/riderRoutes'), { prefix: '/api/riders' });
+fastify.register(require('./routes/policyRoutes'), { prefix: '/api/policies' });
+fastify.register(require('./routes/triggerRoutes'), { prefix: '/api/triggers' });
+
+// Root route
+fastify.get('/', async () => {
+  return { message: 'GigShield Backend API' };
+});
+
+// Start server
 const PORT = process.env.PORT || 5001;
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+const start = async () => {
+  try {
+    await fastify.listen({ port: PORT, host: '0.0.0.0' });
+  } catch (err) {
+    fastify.log.error(err);
+    process.exit(1);
+  }
+};
+
+start();
