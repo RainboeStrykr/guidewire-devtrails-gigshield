@@ -1,5 +1,39 @@
 -- GigShield Supabase Schema
 -- Run this in Supabase SQL Editor to create the required tables
+--
+-- Entity Relationship Diagram (paste into any Mermaid renderer):
+--
+-- ```mermaid
+-- erDiagram
+--     riders {
+--         uuid id PK
+--         text name
+--         text phone UK
+--         text zone
+--         text platform
+--         int fraud_score
+--         timestamptz created_at
+--     }
+--     policies {
+--         uuid id PK
+--         text policy_id UK
+--         uuid rider_id FK
+--         text tier
+--         int premium
+--         int max_coverage
+--         text status
+--         timestamptz created_at
+--     }
+--     trigger_alerts {
+--         uuid id PK
+--         text zone
+--         numeric intensity
+--         text trigger_type
+--         text status
+--         timestamptz created_at
+--     }
+--     riders ||--o{ policies : "has"
+-- ```
 
 -- Riders table
 create table if not exists riders (
