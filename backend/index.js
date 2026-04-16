@@ -1,22 +1,15 @@
-const fastify = require('fastify')({ logger: true });
-const cors = require('@fastify/cors');
-const mongoose = require('mongoose');
 const path = require('path');
 const dotenv = require('dotenv');
 
 dotenv.config({ path: path.resolve(__dirname, '..', '.env') });
 
+const fastify = require('fastify')({ logger: true });
+const cors = require('@fastify/cors');
+
 // Register CORS
 fastify.register(cors, {
   origin: true,
 });
-
-// Connect to MongoDB
-const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/gigshield';
-
-mongoose.connect(mongoURI)
-  .then(() => fastify.log.info('MongoDB connected'))
-  .catch(err => fastify.log.error('MongoDB connection error:', err));
 
 // Register routes
 fastify.register(require('./routes/riderRoutes'), { prefix: '/api/riders' });

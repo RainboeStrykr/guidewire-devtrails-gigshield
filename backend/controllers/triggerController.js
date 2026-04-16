@@ -1,8 +1,15 @@
-const TriggerAlert = require('../models/TriggerAlert');
+const supabase = require('../lib/supabase');
 
 const getTriggerAlerts = async (request, reply) => {
     try {
-        const alerts = await TriggerAlert.find().sort({ createdAt: -1 }).limit(10);
+        const { data: alerts, error } = await supabase
+            .from('trigger_alerts')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .limit(10);
+
+        if (error) throw error;
+
         reply.send(alerts);
     } catch (error) {
         request.log.error('Error fetching alerts:', error);
@@ -18,14 +25,18 @@ const simulateTrigger = async (request, reply) => {
             return reply.code(400).send({ message: 'Zone and intensity are required' });
         }
 
-        const newAlert = new TriggerAlert({
-            zone,
-            intensity,
-            triggerType: triggerType || 'Rainfall',
-            status: 'Active'
-        });
+        const { data: newAlert, error } = await supabase
+            .from('trigger_alerts')
+            .insert({
+                zone,
+                intensity,
+                trigger_type: triggerType || 'Rainfall',
+                status: 'Active'
+            })
+            .select()
+            .single();
 
-        await newAlert.save();
+        if (error) throw error;
 
         reply.code(201).send({ message: 'Trigger simulated successfully', alert: newAlert });
     } catch (error) {
