@@ -2,58 +2,42 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, CheckCircle2, ChevronLeft, Loader2 } from 'lucide-react';
+import { useUser } from '@clerk/nextjs';
+import { ArrowRight, Loader2 } from 'lucide-react';
 import { onboardRider, issuePolicy } from '@/lib/api';
+import Header from '../components/Header';
 
 const OnboardingScreen = () => {
     const router = useRouter();
-    const [step, setStep] = useState(1);
+    const { user } = useUser();
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
-        name: '',
-        phone: '',
         zone: 'Velachery',
         platform: 'Zepto'
     });
 
-    const steps = [
-        {
-            title: "Protect Your Daily Income",
-            description: "Parametric insurance covers you automatically when conditions (like heavy rain) affect your ability to deliver.",
-            icon: <img src="/logo.png" alt="GigShield Logo" style={{ height: '60px', width: 'auto' }} />
-        },
-        {
-            title: "Real-time Thresholds",
-            description: "We monitor local weather stations. If rainfall exceeds 20mm/hr in your active zone, you get paid instantly.",
-            icon: <CheckCircle2 size={48} />
-        },
-        {
-            title: "Your Details",
-            description: "Let's set up your profile.",
-            icon: <CheckCircle2 size={48} />,
-            isForm: true
-        }
-    ];
+    const handleSubmit = async () => {
+        try {
+            setLoading(true);
+            const riderData = {
+                name: user?.fullName || user?.firstName || 'Rider',
+                phone: user?.primaryPhoneNumber?.phoneNumber || '',
+                zone: formData.zone,
+                platform: formData.platform,
+            };
 
-    const handleNext = async () => {
-        if (step < steps.length) {
-            setStep(step + 1);
-        } else {
-            try {
-                setLoading(true);
-                const riderRes = await onboardRider(formData);
-                const policyRes = await issuePolicy({
-                    riderId: riderRes.rider.id,
-                    tier: 'Pro'
-                });
-                localStorage.setItem('rider', JSON.stringify(riderRes.rider));
-                localStorage.setItem('policy', JSON.stringify(policyRes.policy));
-                router.push('/dashboard');
-            } catch (error) {
-                console.error("Failed to onboard:", error);
-            } finally {
-                setLoading(false);
-            }
+            const riderRes = await onboardRider(riderData);
+            const policyRes = await issuePolicy({
+                riderId: riderRes.rider.id,
+                tier: 'Pro'
+            });
+            localStorage.setItem('rider', JSON.stringify(riderRes.rider));
+            localStorage.setItem('policy', JSON.stringify(policyRes.policy));
+            router.push('/dashboard');
+        } catch (error) {
+            console.error('Failed to onboard:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -63,93 +47,60 @@ const OnboardingScreen = () => {
     };
 
     return (
-        <div style={{ backgroundColor: 'var(--surface)', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ maxWidth: '400px', width: '100%', padding: '2rem', backgroundColor: 'var(--surface-container-lowest)', borderRadius: '1.5rem', boxShadow: '0 4px 60px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '80vh' }}>
-                <div style={{ marginTop: '0' }}>
-                    <ChevronLeft size={24} onClick={() => router.push('/login')} style={{ cursor: 'pointer', marginBottom: '2rem' }} />
+        <div className="gs-root">
+            <Header />
+            <div style={{ maxWidth: '500px', margin: '0 auto', padding: '40px 20px' }}>
+                <h1 className="gs-heading" style={{ fontFamily: 'Barlow Condensed', fontSize: '28px', fontWeight: 700, marginBottom: '8px' }}>
+                    Complete Your Profile
+                </h1>
+                <p style={{ fontSize: '14px', color: 'var(--color-text-secondary)', marginBottom: '30px' }}>
+                    Welcome, {user?.firstName || 'Rider'}. Select your delivery zone and platform to activate coverage.
+                </p>
 
-                    <div style={{ color: 'var(--primary)', marginBottom: '1.5rem' }}>
-                        {steps[step - 1].icon}
-                    </div>
-
-                    <h1 className="text-display" style={{ marginBottom: '1.5rem', lineHeight: '1.2' }}>
-                        {steps[step - 1].title}
-                    </h1>
-
-                    <p className="text-subtext" style={{ fontSize: '1.125rem', lineHeight: '1.6' }}>
-                        {steps[step - 1].description}
-                    </p>
-
-                    {steps[step - 1].isForm && (
-                        <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                            <input
-                                type="text"
-                                name="name"
-                                placeholder="Your Name"
-                                value={formData.name}
-                                onChange={handleInputChange}
-                                style={{ padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--outline-variant)' }}
-                            />
-                            <input
-                                type="tel"
-                                name="phone"
-                                placeholder="Phone Number"
-                                value={formData.phone}
-                                onChange={handleInputChange}
-                                style={{ padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--outline-variant)' }}
-                            />
+                <div className="gs-card" style={{ padding: '24px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                        <div>
+                            <label style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-tertiary)', marginBottom: '6px', display: 'block' }}>Delivery Zone</label>
                             <select
                                 name="zone"
                                 value={formData.zone}
                                 onChange={handleInputChange}
-                                style={{ padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--outline-variant)', backgroundColor: 'white' }}
+                                style={{ width: '100%', padding: '12px', borderRadius: 'var(--border-radius-md)', border: '0.5px solid var(--color-border-tertiary)', backgroundColor: 'white', fontFamily: 'inherit', fontSize: '14px' }}
                             >
                                 <option value="Velachery">Velachery</option>
                                 <option value="Adyar">Adyar</option>
                                 <option value="Anna Nagar">Anna Nagar</option>
+                                <option value="Tambaram">Tambaram</option>
+                                <option value="Guindy">Guindy</option>
                             </select>
+                        </div>
+                        <div>
+                            <label style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--color-text-tertiary)', marginBottom: '6px', display: 'block' }}>Platform</label>
                             <select
                                 name="platform"
                                 value={formData.platform}
                                 onChange={handleInputChange}
-                                style={{ padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--outline-variant)', backgroundColor: 'white' }}
+                                style={{ width: '100%', padding: '12px', borderRadius: 'var(--border-radius-md)', border: '0.5px solid var(--color-border-tertiary)', backgroundColor: 'white', fontFamily: 'inherit', fontSize: '14px' }}
                             >
                                 <option value="Zepto">Zepto</option>
                                 <option value="Blinkit">Blinkit</option>
                                 <option value="Instamart">Swiggy Instamart</option>
+                                <option value="BigBasket">BigBasket</option>
                             </select>
                         </div>
-                    )}
-                </div>
-
-                <div style={{ marginBottom: '2rem' }}>
-                    <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem' }}>
-                        {steps.map((_, i) => (
-                            <div
-                                key={i}
-                                style={{
-                                    width: i + 1 === step ? '2rem' : '0.5rem',
-                                    height: '0.5rem',
-                                    backgroundColor: i + 1 === step ? 'var(--primary)' : 'var(--outline-variant)',
-                                    borderRadius: '9999px',
-                                    transition: 'width 0.3s ease'
-                                }}
-                            />
-                        ))}
                     </div>
 
                     <button
-                        className="btn-primary"
-                        onClick={handleNext}
+                        className="gs-action-btn primary"
+                        onClick={handleSubmit}
                         disabled={loading}
-                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+                        style={{ marginTop: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                     >
                         {loading ? (
-                            <Loader2 size={20} className="animate-spin" />
+                            <Loader2 size={18} className="animate-spin" />
                         ) : (
                             <>
-                                {step === steps.length ? 'GET STARTED' : 'CONTINUE'}
-                                <ArrowRight size={20} />
+                                Activate Coverage <ArrowRight size={18} />
                             </>
                         )}
                     </button>

@@ -1,9 +1,10 @@
 const fastify = require('fastify')({ logger: true });
 const cors = require('@fastify/cors');
 const mongoose = require('mongoose');
+const path = require('path');
 const dotenv = require('dotenv');
 
-dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, '..', '.env') });
 
 // Register CORS
 fastify.register(cors, {
