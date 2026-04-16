@@ -24,10 +24,10 @@
   
   /* Utilities */
   --outline: #747780;
-  --outline-variant: rgba(195, 198, 208, 0.2); /* Ghost Border Rule */
+  --outline-variant: rgba(195, 198, 208, 0.2);
   --radius-lg: 1rem;
   --radius-md: 0.75rem;
-  --spacing-scale: 2; /* As defined in Stitch project metadata */
+  --spacing-scale: 2;
 }
 
 * {
@@ -48,7 +48,7 @@ body {
 h1, h2, h3, h4, .headline {
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-weight: 700;
-  line-height: 1.1; /* Editorial Spacing Rule */
+  line-height: 1.1;
   letter-spacing: -0.01em;
 }
 
@@ -70,7 +70,7 @@ h1, h2, h3, h4, .headline {
   border: 1px solid var(--outline-variant);
 }
 
-#root {
+#__next {
   width: 100%;
   margin: 0 auto;
   position: relative;
@@ -137,4 +137,37 @@ h1, h2, h3, h4, .headline {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-size: 0.85rem;
+}
+
+/* App.css utilities */
+.page-container {
+  padding: 1.5rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  max-width: 390px;
+  margin: 0 auto;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
+  background-color: var(--surface);
+}
+
+.spacer-sm { height: 0.5rem; }
+.spacer-md { height: 1rem; }
+.spacer-lg { height: 2rem; }
+.spacer-xl { height: 3rem; }
+
+.text-subtext {
+  color: var(--on-surface-variant);
+  font-size: 0.875rem;
+}
+
+.text-display {
+  font-size: 2.25rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.text-headline {
+  font-size: 1.25rem;
+  font-weight: 700;
 }
