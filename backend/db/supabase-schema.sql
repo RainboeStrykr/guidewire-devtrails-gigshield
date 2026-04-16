@@ -45,6 +45,7 @@ create table if not exists riders (
   fraud_score integer default 12,
   created_at timestamptz default now()
 );
+alter table riders disable row level security;
 
 -- Policies table
 create table if not exists policies (
@@ -57,6 +58,7 @@ create table if not exists policies (
   status text check (status in ('Active', 'Expired', 'Cancelled')) default 'Active',
   created_at timestamptz default now()
 );
+alter table policies disable row level security;
 
 -- Trigger alerts table
 create table if not exists trigger_alerts (
@@ -67,6 +69,7 @@ create table if not exists trigger_alerts (
   status text check (status in ('Active', 'Resolved')) default 'Active',
   created_at timestamptz default now()
 );
+alter table trigger_alerts disable row level security;
 
 -- Indexes
 create index if not exists idx_riders_phone on riders(phone);
