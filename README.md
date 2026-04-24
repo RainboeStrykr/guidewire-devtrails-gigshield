@@ -1,6 +1,7 @@
 # GigShield — AI-Powered Parametric Income Insurance for Q-Commerce Delivery Partners
 
-[Walkthrough video](https://youtu.be/6pQlBcXY8zM)
+[Understand the concept](https://youtu.be/6pQlBcXY8zM)
+[How the frontend will work](https://youtu.be/DY9rxCEqB-Q)
 
 ---
 
@@ -121,45 +122,22 @@ These are objective, third-party verifiable thresholds. No human adjudication re
 
 ---
 
-## AI/ML Integration Plan
-
-### 1. Dynamic Premium Calculation
-
-- **Model type:** Gradient Boosted Trees (XGBoost) trained on historical weather data (IMD public datasets), zone-level disruption frequency, and rider activity patterns
-- **Features:** Zone pin code, platform (Zepto/Blinkit/Instamart), declared weekly hours, historical claim count, seasonal weather forecast score, local flood risk index
-- **Output:** Weekly premium recommendation per rider tier
-- **Phase 1:** Rule-based pricing engine with ML architecture scaffolded
-- **Phase 2:** Full ML model inference integrated
-
-### 2. Fraud Detection
-- **GPS Spoofing Detection:** Cross-reference claimed location during disruption against actual GPS coordinates logged via the web app. Flag mismatches > 2km from declared zone.
-- **Activity Validation:** If a platform API (simulated) shows the rider completed deliveries during a claimed disruption window, the claim is flagged for review.
-- **Duplicate Claim Prevention:** Hash-based deduplication on rider ID + disruption event ID + time window.
-- **Anomaly Detection:** Isolation Forest model on claim frequency patterns — riders with unusual spikes in claims relative to peer zones are flagged.
-- **Fraud Score:** Each rider carries a rolling 90-day fraud score (0–100). Score affects premium and can trigger claim holds.
-
-### 3. Risk Profiling on Onboarding
-- Zone risk score computed at signup using: historical disruption data for pin code, seasonal vulnerability index
-- Rider activity pattern (declared vs. verified via platform simulation) assessed
-- Initial fraud risk set to neutral; adjusts dynamically
-
----
-
 ## Tech Stack
 
 ### Frontend
-- **React.js** — Rider-facing web app (responsive for mobile browsers, PWA-ready)
-- **React Router** for navigation
-- **Tailwind CSS** for styling
+- **Next.js 15 (App Router)** — Rider-facing web app (responsive for mobile browsers, PWA-ready)
+- **Clerk** — Authentication and user management
+- **Lucide React** for icons
+- **Vanilla CSS** for styling
 
 ### Backend
-- **Node.js + Express** — REST API server
-- **PostgreSQL** — Primary database (riders, policies, claims, payouts, trigger logs)
-- **Redis** — Session management and real-time trigger event queue
+- **Node.js + Fastify** — REST API server
+- **Supabase (PostgreSQL)** — Primary database (riders, policies, trigger alerts, claims)
+- **Axios** — HTTP client for external API calls
 
 ### AI/ML
-- **Python microservice (FastAPI)** — Hosts premium calculation model and fraud detection logic
-- **scikit-learn / XGBoost** — Model training and inference
+- **Python microservice (FastAPI)** — Hosts premium calculation model and fraud detection logic (Planned)
+- **scikit-learn / XGBoost** — Model training and inference (Planned)
 - **Called from Node.js backend** via internal HTTP
 
 ### External Integrations (Free Tiers / Mocks)
@@ -170,34 +148,15 @@ These are objective, third-party verifiable thresholds. No human adjudication re
 - **Mock Platform API** — Simulated Zepto/Blinkit activity feed (built in-house)
 
 ### Infrastructure
+- **Docker + Docker Compose** — Containerised local development and deployment
 - **GitHub** — Version control and CI
 
 ---
 
-## Development Plan
+## Documentation
 
-### Phase 1 (Current — March 20) — Ideation & Architecture
-- [x] Persona selection and use case definition
-- [x] Parametric trigger design
-- [x] Weekly premium model design
-- [x] Tech stack finalized
-- [ ] Repository scaffolding (React + Node.js boilerplate)
-- [ ] DB schema design (riders, policies, claims, payouts)
-
-### Phase 2 (March 21 – April 4) — Core Build
-- [ ] Worker onboarding flow (web)
-- [ ] Risk profiling engine (rule-based v1)
-- [ ] Policy creation with dynamic weekly premium
-- [ ] Real-time trigger monitoring (OpenWeatherMap + OpenAQ)
-- [ ] Automated claim initiation on trigger fire
-- [ ] Basic fraud detection (GPS + duplicate check)
-- [ ] Razorpay sandbox payout simulation
-
-### Phase 3 (April 5 – 17) — Scale & Polish
-- [ ] ML-based dynamic pricing model (XGBoost)
-- [ ] Advanced fraud detection (Isolation Forest, activity validation)
-- [ ] Full analytics dashboard — worker view + admin/insurer view
-- [ ] Instant payout simulation with Razorpay test mode
+- [Architecture & API Reference](docs/architecture.md) — system design, DB schema, API endpoints, trigger flow, and local setup
+- [Product Requirements Document](docs/PRD.md) — full product spec, functional requirements, personas, and success metrics
 
 ---
 
@@ -213,24 +172,33 @@ These are objective, third-party verifiable thresholds. No human adjudication re
 
 ---
 
-## Repository Structure (Planned)
+## Repository Structure
 
 ```
 gigshield/
-├── client/                  # React frontend
-│   ├── src/
-│   │   ├── pages/           # Onboarding, Dashboard, Claims, Policy
-│   │   ├── components/      # Shared UI components
-│   │   └── services/        # API call wrappers
-├── server/                  # Node.js + Express backend
-│   ├── routes/              # Rider, Policy, Claims, Triggers, Payouts
-│   ├── models/              # PostgreSQL schema (Sequelize/Prisma)
-│   ├── jobs/                # Bull queue jobs for trigger monitoring
-│   └── integrations/        # Weather API, AQI API, Razorpay, Mock Platform
-├── ml-service/              # Python FastAPI microservice
-│   ├── pricing_model/       # XGBoost premium calculator
-│   └── fraud_model/         # Isolation Forest fraud scorer
-├── docs/                    # Architecture diagrams, DB schema
+├── frontend/                    # Next.js 15 frontend (App Router)
+│   ├── app/
+│   │   ├── onboarding/          # Worker onboarding flow
+│   │   ├── dashboard/           # Rider dashboard
+│   │   ├── claims/              # Claims view
+│   │   ├── policy/              # Policy details
+│   │   ├── mycoverage/          # Coverage summary
+│   │   ├── trigger/             # Trigger monitoring view
+│   │   ├── sign-in/             # Clerk sign-in
+│   │   ├── sign-up/             # Clerk sign-up
+│   │   └── components/          # Shared UI components (Header, etc.)
+│   └── middleware.js            # Clerk auth middleware
+├── backend/                     # Node.js + Fastify backend
+│   ├── routes/                  # Fastify API routes (riders, policies, triggers)
+│   ├── controllers/             # Request handling logic
+│   ├── lib/                     # Supabase client
+│   ├── db/                      # SQL schema files
+│   └── index.js                 # Server entry point
+├── ml-service/                  # Python FastAPI microservice (Planned)
+│   ├── pricing_model/           # XGBoost premium calculator
+│   └── fraud_model/             # Isolation Forest fraud scorer
+├── docs/                        # Architecture diagrams, PRD
+├── docker-compose.yml           # Multi-service container orchestration
 └── README.md
 ```
 
@@ -240,8 +208,8 @@ gigshield/
 
 - Abhiraj Bhowmick
 - Anik Das
-- Yashi Ghosh
 - Sourish Ghosh
+- Yashi Ghosh
 
 ---
 
