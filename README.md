@@ -1,6 +1,7 @@
 # GigShield — AI-Powered Parametric Income Insurance for Q-Commerce Delivery Partners
 
 [Understand the concept](https://youtu.be/6pQlBcXY8zM)
+
 [How the frontend will work](https://youtu.be/DY9rxCEqB-Q)
 
 ---
